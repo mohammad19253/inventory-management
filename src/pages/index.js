@@ -1,38 +1,19 @@
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import {
-  Container,
-  Typography,
-  Box,
-  Grid,
-  Card,
-  CardContent,
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  AppBar,
-  Toolbar,
-} from '@mui/material';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import WarehouseIcon from '@mui/icons-material/Warehouse';
-import CategoryIcon from '@mui/icons-material/Category';
+ 
+import { useEffect, useState } from 'react';
+import { Container, Typography, Grid, Card, CardContent, Box, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { Layout } from '@/components/Layout';
+import { SUMMARY_CARDS, TABLE_HEADERS } from '@/constants/dashboard';
 
-export default function Home() {
+export default function Dashboard() {
   const [products, setProducts] = useState([]);
   const [warehouses, setWarehouses] = useState([]);
   const [stock, setStock] = useState([]);
 
   useEffect(() => {
-    // Fetch all data
     Promise.all([
-      fetch('/api/products').then(res => res.json()),
-      fetch('/api/warehouses').then(res => res.json()),
-      fetch('/api/stock').then(res => res.json()),
+      fetch('/api/products').then(r => r.json()),
+      fetch('/api/warehouses').then(r => r.json()),
+      fetch('/api/stock').then(r => r.json()),
     ]).then(([productsData, warehousesData, stockData]) => {
       setProducts(productsData);
       setWarehouses(warehousesData);
@@ -40,124 +21,68 @@ export default function Home() {
     });
   }, []);
 
-  // Calculate total inventory value
-  const totalValue = stock.reduce((sum, item) => {
-    const product = products.find(p => p.id === item.productId);
-    return sum + (product ? product.unitCost * item.quantity : 0);
+  const totalValue = stock.reduce((sum, s) => {
+    const product = products.find(p => p.id === s.productId);
+    return sum + (product ? product.unitCost * s.quantity : 0);
   }, 0);
 
-  // Get products with stock across all warehouses
-  const inventoryOverview = products.map(product => {
-    const productStock = stock.filter(s => s.productId === product.id);
+  const inventoryOverview = products.map(p => {
+    const productStock = stock.filter(s => s.productId === p.id);
     const totalQuantity = productStock.reduce((sum, s) => sum + s.quantity, 0);
-    return {
-      ...product,
-      totalQuantity,
-      isLowStock: totalQuantity < product.reorderPoint,
-    };
+    return { ...p, totalQuantity, isLowStock: totalQuantity < p.reorderPoint };
   });
 
+  const CARD_DATA = {
+    products: products.length,
+    warehouses: warehouses.length,
+    totalValue: totalValue.toFixed(2),
+  };
+
   return (
-    <>
-      <AppBar position="static">
-        <Toolbar>
-          <InventoryIcon sx={{ mr: 2 }} />
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Inventory Management System
-          </Typography>
-          <Button color="inherit" component={Link} href="/products">
-            Products
-          </Button>
-          <Button color="inherit" component={Link} href="/warehouses">
-            Warehouses
-          </Button>
-          <Button color="inherit" component={Link} href="/stock">
-            Stock Levels
-          </Button>
-        </Toolbar>
-      </AppBar>
-
-      <Container sx={{ mt: 4, mb: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Dashboard
-        </Typography>
-
-        {/* Summary Cards */}
+    <Layout pageTitle="Dashboard">
+      <Container>
+        <Typography variant="h4" gutterBottom>Dashboard</Typography> 
         <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} sm={4}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <CategoryIcon sx={{ mr: 1, color: 'primary.main' }} />
-                  <Typography variant="h6">Total Products</Typography>
-                </Box>
-                <Typography variant="h3">{products.length}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <WarehouseIcon sx={{ mr: 1, color: 'primary.main' }} />
-                  <Typography variant="h6">Warehouses</Typography>
-                </Box>
-                <Typography variant="h3">{warehouses.length}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Card>
-              <CardContent>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <InventoryIcon sx={{ mr: 1, color: 'primary.main' }} />
-                  <Typography variant="h6">Total Inventory Value</Typography>
-                </Box>
-                <Typography variant="h3">${totalValue.toFixed(2)}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
+          {SUMMARY_CARDS.map(card => {
+            const Icon = card.icon;
+            return (
+              <Grid item xs={12} sm={4} key={card.label}>
+                <Card sx={{ borderRadius: 2, boxShadow: 3 }}>
+                  <CardContent>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                      <Icon sx={{ mr: 1, color: 'primary.main' }} />
+                      <Typography variant="h6">{card.label}</Typography>
+                    </Box>
+                    <Typography variant="h3">{CARD_DATA[card.key]}</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            );
+          })}
         </Grid>
 
-        {/* Inventory Overview Table */}
-        <Typography variant="h5" gutterBottom>
-          Inventory Overview
-        </Typography>
-        <TableContainer component={Paper}>
+        <Typography variant="h5" gutterBottom>Inventory Overview</Typography>
+        <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 3 }}>
           <Table>
-            <TableHead>
+            <TableHead sx={{ backgroundColor: '#f5f5f5' }}>
               <TableRow>
-                <TableCell><strong>SKU</strong></TableCell>
-                <TableCell><strong>Product Name</strong></TableCell>
-                <TableCell><strong>Category</strong></TableCell>
-                <TableCell align="right"><strong>Total Stock</strong></TableCell>
-                <TableCell align="right"><strong>Reorder Point</strong></TableCell>
-                <TableCell><strong>Status</strong></TableCell>
+                {TABLE_HEADERS.map(header => (
+                  <TableCell key={header.key} align={header.align}><strong>{header.label}</strong></TableCell>
+                ))}
               </TableRow>
             </TableHead>
             <TableBody>
-              {inventoryOverview.map((item) => (
-                <TableRow 
-                  key={item.id}
-                  sx={{ 
-                    backgroundColor: item.isLowStock ? '#fff3e0' : 'inherit' 
-                  }}
-                >
+              {inventoryOverview.map(item => (
+                <TableRow key={item.id} sx={{ backgroundColor: item.isLowStock ? '#fff3e0' : 'inherit' }}>
                   <TableCell>{item.sku}</TableCell>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.category}</TableCell>
                   <TableCell align="right">{item.totalQuantity}</TableCell>
                   <TableCell align="right">{item.reorderPoint}</TableCell>
                   <TableCell>
-                    {item.isLowStock ? (
-                      <Typography color="warning.main" fontWeight="bold">
-                        Low Stock
-                      </Typography>
-                    ) : (
-                      <Typography color="success.main">
-                        In Stock
-                      </Typography>
-                    )}
+                    <Typography color={item.isLowStock ? 'warning.main' : 'success.main'} fontWeight={item.isLowStock ? 'bold' : 'normal'}>
+                      {item.isLowStock ? 'Low Stock' : 'In Stock'}
+                    </Typography>
                   </TableCell>
                 </TableRow>
               ))}
@@ -165,7 +90,6 @@ export default function Home() {
           </Table>
         </TableContainer>
       </Container>
-    </>
+    </Layout>
   );
 }
-
