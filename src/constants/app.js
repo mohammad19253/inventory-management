@@ -1,3 +1,3 @@
-export const appConfig ={
-    baseUrl :"http://localhost:3000/"
-} 
+export const DRAWER_WIDTH = 250;
+
+ 

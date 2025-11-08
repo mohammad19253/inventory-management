@@ -6,10 +6,10 @@ export const TRANSFER_FIELDS = [
 ];
 
 export const TRANSFER_TABLE_HEADERS = [
-  { label: 'ID', key: 'id', align: 'left' },
-  { label: 'Product', key: 'productName', align: 'left' },
-  { label: 'From', key: 'sourceWarehouseName', align: 'left' },
-  { label: 'To', key: 'destinationWarehouseName', align: 'left' },
-  { label: 'Quantity', key: 'quantity', align: 'right' },
-  { label: 'Date', key: 'date', align: 'left' },
+  { label: 'ID', key: 'id', align: 'center' },
+  { label: 'Product', key: 'productName', align: 'center' },
+  { label: 'From', key: 'sourceWarehouseName', align: 'center' },
+  { label: 'To', key: 'destinationWarehouseName', align: 'center' },
+  { label: 'Quantity', key: 'quantity', align: 'center' },
+  { label: 'Date', key: 'date', align: 'center' },
 ];

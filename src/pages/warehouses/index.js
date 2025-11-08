@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   Container,
   Typography,
@@ -17,13 +17,11 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  AppBar,
-  Toolbar,
   Box,
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import InventoryIcon from '@mui/icons-material/Inventory';
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+
 
 export default function Warehouses() {
   const [warehouses, setWarehouses] = useState([]);
@@ -35,7 +33,7 @@ export default function Warehouses() {
   }, []);
 
   const fetchWarehouses = () => {
-    fetch('/api/warehouses')
+    fetch("/api/warehouses")
       .then((res) => res.json())
       .then((data) => setWarehouses(data));
   };
@@ -53,50 +51,38 @@ export default function Warehouses() {
   const handleDelete = async () => {
     try {
       const res = await fetch(`/api/warehouses/${selectedWarehouseId}`, {
-        method: 'DELETE',
+        method: "DELETE",
       });
 
       if (res.ok) {
-        setWarehouses(warehouses.filter((warehouse) => warehouse.id !== selectedWarehouseId));
+        setWarehouses(
+          warehouses.filter((warehouse) => warehouse.id !== selectedWarehouseId)
+        );
         handleClose();
       }
     } catch (error) {
-      console.error('Error deleting warehouse:', error);
+      console.error("Error deleting warehouse:", error);
     }
   };
 
   return (
     <>
-      <AppBar position="static">
-        <Toolbar>
-          <InventoryIcon sx={{ mr: 2 }} />
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Inventory Management System
-          </Typography>
-          <Button color="inherit" component={Link} href="/">
-            Dashboard
-          </Button>
-          <Button color="inherit" component={Link} href="/products">
-            Products
-          </Button>
-          <Button color="inherit" component={Link} href="/warehouses">
-            Warehouses
-          </Button>
-          <Button color="inherit" component={Link} href="/stock">
-            Stock Levels
-          </Button>
-        </Toolbar>
-      </AppBar>
-
       <Container sx={{ mt: 4, mb: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3,
+          }}
+        >
           <Typography variant="h4" component="h1">
             Warehouses
           </Typography>
-          <Button 
-            variant="contained" 
-            color="primary" 
-            component={Link} 
+          <Button
+            variant="contained"
+            color="primary"
+            component={Link}
             href="/warehouses/add"
           >
             Add Warehouse
@@ -107,10 +93,18 @@ export default function Warehouses() {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell><strong>Code</strong></TableCell>
-                <TableCell><strong>Name</strong></TableCell>
-                <TableCell><strong>Location</strong></TableCell>
-                <TableCell><strong>Actions</strong></TableCell>
+                <TableCell>
+                  <strong>Code</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>Name</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>Location</strong>
+                </TableCell>
+                <TableCell>
+                  <strong>Actions</strong>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -153,7 +147,8 @@ export default function Warehouses() {
           <DialogTitle>Delete Warehouse</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Are you sure you want to delete this warehouse? This action cannot be undone.
+              Are you sure you want to delete this warehouse? This action cannot
+              be undone.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -169,4 +164,3 @@ export default function Warehouses() {
     </>
   );
 }
-

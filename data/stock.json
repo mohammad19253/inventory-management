@@ -63,12 +63,25 @@
     "id": 1762560321370,
     "productId": 2,
     "warehouseId": 2,
-    "quantity": 5
+ 
+    "quantity": 25
   },
   {
     "id": 1762561247670,
     "productId": 1,
     "warehouseId": 3,
     "quantity": 6
+  },
+  {
+    "productId": 2,
+    "warehouseId": 2,
+    "quantity": 222,
+    "id": 1762561247671
+  },
+  {
+    "productId": 2,
+    "warehouseId": 2,
+    "quantity": 24124,
+    "id": 1762561247672
   }
 ]
