@@ -16,7 +16,7 @@ import {
 } from "@tanstack/react-table";
 import { Pagination } from "../Pagination";
 
-export default function DataTable({
+export const DataTable = ({
   columns = [],
   data = [],
   loading = false,
@@ -27,7 +27,7 @@ export default function DataTable({
   onPageSizeChange,
   showPagination = true,
   tableProps,
-}) {
+}) => {
   const theme = useTheme();
 
   const table = useReactTable({
@@ -37,7 +37,12 @@ export default function DataTable({
   });
 
   return (
-    <Paper>
+    <Paper
+      sx={{
+        borderRadius: 1,
+        overflow: "hidden",
+      }}
+    >
       <TableContainer>
         <MuiTable {...tableProps}>
           <TableHead>
@@ -101,7 +106,7 @@ export default function DataTable({
                       <TableCell
                         key={cell.id}
                         align="center"
-                        sx={{ border: `1px solid ${theme.palette.divider}` }}
+                        sx={{ border: `1px solid ${theme.palette.divider}` ,p:1 }}
                       >
                         {flexRender(
                           cell.column.columnDef.cell,
@@ -126,4 +131,4 @@ export default function DataTable({
       )}
     </Paper>
   );
-}
+};

@@ -1,134 +1,101 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import Link from "next/link";
+import React, { useState } from "react";
 import {
   Container,
-  Typography,
-  TextField,
-  Button,
-  Box,
   Paper,
-  MenuItem,
+  Typography,
+  Snackbar,
+  Alert,
+  Stack,
+  Button,
 } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import StockForm from "./StockForm";
+import axios from "@/services/axios";
+import { stockSchema } from "./schema/stockSchema";
+import { useQueryClient } from "@tanstack/react-query";
 
-export default function AddStock() {
-  const [stock, setStock] = useState({
-    productId: "",
-    warehouseId: "",
-    quantity: "",
-  });
-  const [products, setProducts] = useState([]);
-  const [warehouses, setWarehouses] = useState([]);
-
+export default function AddStockPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: zodResolver(stockSchema),
+    defaultValues: {
+      productId: "",
+      warehouseId: "",
+      quantity: 1,
+    },
+  });
 
-  useEffect(() => {
-    Promise.all([
-      fetch("/api/products").then((res) => res.json()),
-      fetch("/api/warehouses").then((res) => res.json()),
-    ]).then(([productsData, warehousesData]) => {
-      setProducts(productsData);
-      setWarehouses(warehousesData);
-    });
-  }, []);
+  const [toast, setToast] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
 
-  const handleChange = (e) => {
-    setStock({ ...stock, [e.target.name]: e.target.value });
-  };
+  const showToast = (message, severity = "success") =>
+    setToast({ open: true, message, severity });
+  const handleCloseToast = () => setToast((p) => ({ ...p, open: false }));
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await fetch("/api/stock", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        productId: parseInt(stock.productId),
-        warehouseId: parseInt(stock.warehouseId),
-        quantity: parseInt(stock.quantity),
-      }),
-    });
-    if (res.ok) {
+  const onSubmit = async (data) => {
+    try {
+      setLoadingSubmit(true);
+      await axios.post("/stock", data);
+      await queryClient.invalidateQueries(["alerts", "count"]);
+      showToast("Stock record added successfully");
       router.push("/stock");
+      reset();
+    } catch (error) {
+      console.error(error);
+      showToast("Failed to add stock record", "error");
+    } finally {
+      setLoadingSubmit(false);
     }
   };
 
   return (
-    <>
-      <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
-        <Paper elevation={3} sx={{ p: 4 }}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Add Stock Record
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 2 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              select
-              label="Product"
-              name="productId"
-              value={stock.productId}
-              onChange={handleChange}
+    <Container maxWidth="sm" sx={{ py: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h5" fontWeight="bold" mb={3}>
+          Add Stock Record
+        </Typography>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <StockForm control={control} errors={errors} />
+
+          <Stack direction="row" spacing={2}>
+            <Button type="submit" variant="contained" disabled={loadingSubmit}>
+              {loadingSubmit ? "Saving..." : "Submit"}
+            </Button>
+            <Button
+              type="button"
+              variant="outlined"
+              onClick={() => reset()}
+              disabled={loadingSubmit}
             >
-              {products.map((product) => (
-                <MenuItem key={product.id} value={product.id}>
-                  {product.name} ({product.sku})
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              select
-              label="Warehouse"
-              name="warehouseId"
-              value={stock.warehouseId}
-              onChange={handleChange}
-            >
-              {warehouses.map((warehouse) => (
-                <MenuItem key={warehouse.id} value={warehouse.id}>
-                  {warehouse.name} ({warehouse.code})
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Quantity"
-              name="quantity"
-              type="number"
-              inputProps={{ min: "0" }}
-              value={stock.quantity}
-              onChange={handleChange}
-            />
-            <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-              >
-                Add Stock
-              </Button>
-              <Button
-                fullWidth
-                variant="outlined"
-                component={Link}
-                href="/stock"
-              >
-                Cancel
-              </Button>
-            </Box>
-          </Box>
-        </Paper>
-      </Container>
-    </>
+              Reset
+            </Button>
+          </Stack>
+        </form>
+      </Paper>
+
+      <Snackbar
+        open={toast.open}
+        autoHideDuration={2500}
+        onClose={handleCloseToast}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity={toast.severity} onClose={handleCloseToast}>
+          {toast.message}
+        </Alert>
+      </Snackbar>
+    </Container>
   );
 }

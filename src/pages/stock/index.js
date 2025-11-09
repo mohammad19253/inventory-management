@@ -1,86 +1,86 @@
-import { useState } from "react";
-import Link from "next/link";
+import { useState, useEffect } from "react";
 import {
+  Box,
   Container,
   Typography,
-  Box,
-  IconButton,
   Button,
+  Snackbar,
+  Alert,
   Dialog,
-  DialogActions,
+  DialogTitle,
   DialogContent,
   DialogContentText,
-  DialogTitle,
+  DialogActions,
+  IconButton,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import DataTable from "@/components/DataTable";
-import { appConfig } from "@/config/app";
+import Link from "next/link";
+import { DataTable } from "@/components/shared";
+import axios from "@/services/axios";
 
-export default function Stock({
-  initialStock,
-  products,
-  warehouses,
-  initialPage,
-  initialPageSize,
-}) {
+export default function StockPage({ initialStock, products, warehouses }) {
   const [stock, setStock] = useState(initialStock.list);
-  const [totalRows, setTotalRows] = useState(initialStock.total);
-  const [page, setPage] = useState(initialPage);
-  const [pageSize, setPageSize] = useState(initialPageSize);
+  const [total, setTotal] = useState(initialStock.total);
   const [loading, setLoading] = useState(false);
+  const [successToast, setSuccessToast] = useState(false);
 
-  const [open, setOpen] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const [openDelete, setOpenDelete] = useState(false);
   const [selectedStockId, setSelectedStockId] = useState(null);
 
-  const handleClickOpen = (id) => {
-    setSelectedStockId(id);
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setSelectedStockId(null);
-  };
-
-  const fetchPage = async (newPage, newPageSize = pageSize) => {
+  const fetchStock = async (pageNum = page, pageSizeNum = pageSize) => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `/api/stock?page=${newPage}&pageSize=${newPageSize}`
-      );
-      const data = await res.json();
-      setStock(data.list);
-      setTotalRows(data.total);
-      setPage(newPage);
-      setPageSize(newPageSize);
-    } catch (e) {
-      console.error("Failed to fetch stock page:", e);
+      const res = await axios.get("/stock", {
+        params: { page: pageNum, pageSize: pageSizeNum },
+      });
+      setStock(res.data.list);
+      setTotal(res.data.total);
+    } catch (err) {
+      console.error(err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePageChange = (newPage) => setPage(newPage);
+  const handlePageSizeChange = (newPageSize) => {
+    setPageSize(newPageSize);
+    setPage(1);
+  };
+
+  useEffect(() => {
+    fetchStock(page, pageSize);
+  }, [page, pageSize]);
+
+  const handleOpenDelete = (id) => {
+    setSelectedStockId(id);
+    setOpenDelete(true);
+  };
+
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+    setSelectedStockId(null);
   };
 
   const handleDelete = async () => {
     if (!selectedStockId) return;
     setLoading(true);
     try {
-      const res = await fetch(`/api/stock/${selectedStockId}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Failed to delete stock");
-
-      // Fetch updated page after deletion
-      await fetchPage(page, pageSize);
-      handleClose();
+      await axios.delete(`/stock/${selectedStockId}`);
+      await fetchStock(page, pageSize);
+      setSuccessToast(true);
     } catch (error) {
-      console.error("Error deleting stock:", error);
+      console.error("Delete failed:", error);
     } finally {
       setLoading(false);
+      handleCloseDelete();
     }
   };
 
-  // Helper functions
   const getProductName = (productId) => {
     const product = products.find((p) => p.id === productId);
     return product ? `${product.name} (${product.sku})` : "Unknown";
@@ -91,9 +91,7 @@ export default function Stock({
     return warehouse ? `${warehouse.name} (${warehouse.code})` : "Unknown";
   };
 
-  // Columns for react-table
   const columns = [
-    { accessorKey: "index", header: "#" },
     {
       accessorFn: (row) => getProductName(row.productId),
       id: "product",
@@ -109,44 +107,34 @@ export default function Stock({
       id: "actions",
       header: "Actions",
       cell: ({ row }) => (
-        <>
+        <Box>
           <IconButton
-            color="primary"
             component={Link}
             href={`/stock/edit/${row.original.id}`}
             size="small"
+            color="primary"
           >
             <EditIcon />
           </IconButton>
           <IconButton
             color="error"
             size="small"
-            onClick={() => handleClickOpen(row.original.id)}
+            onClick={() => handleOpenDelete(row.original.id)}
           >
             <DeleteIcon />
           </IconButton>
-        </>
+        </Box>
       ),
     },
   ];
 
   return (
-    <Container sx={{ mt: 4, mb: 4 }}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 3,
-        }}
-      >
-        <Typography variant="h4">Stock Levels</Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          component={Link}
-          href="/stock/add"
-        >
+    <Container sx={{ py: 4 }}>
+      <Box display="flex" justifyContent="space-between" mb={3}>
+        <Typography variant="h5" fontWeight="bold">
+          Stock Levels
+        </Typography>
+        <Button variant="contained" component={Link} href="/stock/add">
           Add Stock Record
         </Button>
       </Box>
@@ -157,13 +145,13 @@ export default function Stock({
         loading={loading}
         page={page}
         pageSize={pageSize}
-        totalRows={totalRows}
-        onPageChange={fetchPage}
-        onPageSizeChange={(newSize) => fetchPage(1, newSize)}
+        totalRows={total}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
       />
 
-      {/* Delete Dialog */}
-      <Dialog open={open} onClose={handleClose}>
+      {/* Delete confirmation dialog */}
+      <Dialog open={openDelete} onClose={handleCloseDelete}>
         <DialogTitle>Delete Stock Record</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -172,41 +160,51 @@ export default function Stock({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
+          <Button onClick={handleCloseDelete}>Cancel</Button>
           <Button onClick={handleDelete} color="error" autoFocus>
             Delete
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Success toast */}
+      <Snackbar
+        open={successToast}
+        autoHideDuration={2500}
+        onClose={() => setSuccessToast(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity="success" onClose={() => setSuccessToast(false)}>
+          Stock record deleted successfully!
+        </Alert>
+      </Snackbar>
     </Container>
   );
 }
 
-// SSR
-export async function getServerSideProps(context) {
-  const page = parseInt(context.query.page || "1");
-  const pageSize = parseInt(context.query.pageSize || "10");
-  const baseUrl = appConfig.baseUrl;
+export async function getServerSideProps() {
+  try {
+    const [stockRes, productsRes, warehousesRes] = await Promise.all([
+      axios.get(`/stock`, { params: { page: 1, pageSize: 10 } }),
+      axios.get(`/products`),
+      axios.get(`/warehouses`),
+    ]);
 
-  const [stockRes, productsRes, warehousesRes] = await Promise.all([
-    fetch(`${baseUrl}/api/stock?page=${page}&pageSize=${pageSize}`),
-    fetch(`${baseUrl}/api/products`),
-    fetch(`${baseUrl}/api/warehouses`),
-  ]);
-
-  const stockData = await stockRes.json();
-  const products = await productsRes.json();
-  const warehouses = await warehousesRes.json();
-
-  return {
-    props: {
-      initialStock: stockData,
-      products,
-      warehouses,
-      initialPage: page,
-      initialPageSize: pageSize,
-    },
-  };
+    return {
+      props: {
+        initialStock: stockRes.data,
+        products: productsRes.data,
+        warehouses: warehousesRes.data,
+      },
+    };
+  } catch (error) {
+    console.error("SSR Fetch Error:", error);
+    return {
+      props: {
+        initialStock: { list: [], total: 0 },
+        products: [],
+        warehouses: [],
+      },
+    };
+  }
 }

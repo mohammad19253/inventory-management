@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Snackbar, Alert, Typography, Container } from "@mui/material";
-import axios from "@/libs/axios";
+import { Snackbar, Alert, Typography, Container, Divider } from "@mui/material";
+import axios from "@/services/axios";
 import { appConfig } from "@/config/app";
 import TransferForm from "./components/TransferForm";
 import TransferHistory from "./components/TransferHistory";
@@ -56,17 +56,21 @@ export default function TransfersPage({
   };
 
   return (
-    <Container sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Transfers
+    <Container>
+      <Typography variant="h5" gutterBottom fontWeight="bold">
+        Create Transfer
       </Typography>
+
       <TransferForm
         warehouses={warehouses}
         products={products}
         error={error}
         onSubmit={handleTransfer}
       />
-      <Typography variant="h4" gutterBottom sx={{ mt: 4 }}>
+
+      <Divider sx={{ my: 5 }} />
+
+      <Typography variant="h5" gutterBottom fontWeight="bold" sx={{ mt: 4 }}>
         Transfers History
       </Typography>
       <TransferHistory
@@ -93,11 +97,10 @@ export default function TransfersPage({
 }
 
 export async function getServerSideProps() {
-  const baseUrl = appConfig.baseUrl;
   const [warehousesRes, productsRes, transfersRes] = await Promise.all([
-    axios.get(`${baseUrl}/api/warehouses`),
-    axios.get(`${baseUrl}/api/products`),
-    axios.get(`${baseUrl}/api/transfers?pageSize=5&page=1`),
+    axios.get(`/warehouses`),
+    axios.get(`/products`),
+    axios.get(`/transfers?pageSize=5&page=1`),
   ]);
 
   return {

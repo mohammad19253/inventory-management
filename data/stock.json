@@ -3,37 +3,37 @@
     "id": 1,
     "productId": 1,
     "warehouseId": 1,
-    "quantity": 239
+    "quantity": 1000
   },
   {
     "id": 2,
     "productId": 1,
     "warehouseId": 2,
-    "quantity": 155
+    "quantity": 1000
   },
   {
     "id": 3,
     "productId": 2,
     "warehouseId": 1,
-    "quantity": 1195
+    "quantity": 1000
   },
   {
     "id": 4,
     "productId": 2,
     "warehouseId": 3,
-    "quantity": 800
+    "quantity": 1000
   },
   {
     "id": 5,
     "productId": 3,
     "warehouseId": 1,
-    "quantity": 2499
+    "quantity": 2500
   },
   {
     "id": 6,
     "productId": 3,
     "warehouseId": 2,
-    "quantity": 1801
+    "quantity": 1800
   },
   {
     "id": 7,
@@ -58,30 +58,5 @@
     "productId": 5,
     "warehouseId": 3,
     "quantity": 700
-  },
-  {
-    "id": 1762560321370,
-    "productId": 2,
-    "warehouseId": 2,
- 
-    "quantity": 25
-  },
-  {
-    "id": 1762561247670,
-    "productId": 1,
-    "warehouseId": 3,
-    "quantity": 6
-  },
-  {
-    "productId": 2,
-    "warehouseId": 2,
-    "quantity": 222,
-    "id": 1762561247671
-  },
-  {
-    "productId": 2,
-    "warehouseId": 2,
-    "quantity": 24124,
-    "id": 1762561247672
   }
 ]

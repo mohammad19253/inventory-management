@@ -22,7 +22,6 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-
 export default function Warehouses() {
   const [warehouses, setWarehouses] = useState([]);
   const [open, setOpen] = useState(false);
@@ -67,7 +66,7 @@ export default function Warehouses() {
 
   return (
     <>
-      <Container sx={{ mt: 4, mb: 4 }}>
+      <Container>
         <Box
           sx={{
             display: "flex",
@@ -115,7 +114,7 @@ export default function Warehouses() {
                   <TableCell>{warehouse.location}</TableCell>
                   <TableCell>
                     <IconButton
-                      color="primary"
+                      color="warning"
                       component={Link}
                       href={`/warehouses/edit/${warehouse.id}`}
                       size="small"

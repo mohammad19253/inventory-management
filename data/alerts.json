@@ -1,1 +1,67 @@
-[]
+[
+  {
+    "id": "alert_1762694300201_a4fb87",
+    "productId": 1,
+    "productName": "Bamboo Spork Set",
+    "totalStock": 2000,
+    "reorderPoint": 100,
+    "reorderQty": 200,
+    "status": "overstocked",
+    "lastUpdated": "2025-11-09T13:30:04.384Z",
+    "actions": [],
+    "dismissed": false,
+    "notes": ""
+  },
+  {
+    "id": "alert_1762694300201_7304fb",
+    "productId": 2,
+    "productName": "Compostable Food Container 32oz",
+    "totalStock": 2000,
+    "reorderPoint": 500,
+    "reorderQty": 1000,
+    "status": "overstocked",
+    "lastUpdated": "2025-11-09T13:30:04.384Z",
+    "actions": [],
+    "dismissed": false,
+    "notes": ""
+  },
+  {
+    "id": "alert_1762694300201_4bf271",
+    "productId": 3,
+    "productName": "Wooden Chopsticks",
+    "totalStock": 4300,
+    "reorderPoint": 1000,
+    "reorderQty": 2000,
+    "status": "overstocked",
+    "lastUpdated": "2025-11-09T13:30:04.384Z",
+    "actions": [],
+    "dismissed": false,
+    "notes": ""
+  },
+  {
+    "id": "alert_1762694300201_5c789e",
+    "productId": 4,
+    "productName": "Recyclable Paper Bowl",
+    "totalStock": 1550,
+    "reorderPoint": 750,
+    "reorderQty": 1500,
+    "status": "overstocked",
+    "lastUpdated": "2025-11-09T13:30:04.384Z",
+    "actions": [],
+    "dismissed": false,
+    "notes": ""
+  },
+  {
+    "id": "alert_1762694300201_fa222e",
+    "productId": 5,
+    "productName": "Biodegradable Coffee Cup 12oz",
+    "totalStock": 1150,
+    "reorderPoint": 600,
+    "reorderQty": 1200,
+    "status": "overstocked",
+    "lastUpdated": "2025-11-09T13:30:04.384Z",
+    "actions": [],
+    "dismissed": false,
+    "notes": ""
+  }
+]

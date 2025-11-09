@@ -1,5 +1,6 @@
-import DataTable from "@/components/DataTable";
 import { format } from "date-fns";
+import { DataTable } from "@/components/shared";
+
 export default function TransferHistory({
   transfers,
   loading,
@@ -9,7 +10,6 @@ export default function TransferHistory({
   onPageChange,
   onPageSizeChange,
 }) {
-  // Define columns for react-table
   const columns = [
     { accessorKey: "index", header: "No" },
     {

@@ -3,14 +3,40 @@ import {
   Warehouse,
   Inventory2,
   CompareArrows,
-  Notifications,Storage
+  Notifications,
+  Storage,
+  Add,
+  Edit,
+  ListAlt,
+  ShoppingCart,
 } from "@mui/icons-material";
 
 export const NAV_ITEMS = [
   { label: "Dashboard", href: "/", icon: <Dashboard /> },
   { label: "Transfers", href: "/transfers", icon: <CompareArrows /> },
-  { label: "Products", href: "/products", icon: <Inventory2 /> },
-  { label: "Stock", href: "/stock", icon: <Storage /> }, // changed icon
+  {
+    label: "Products",
+    icon: <Inventory2 />,
+    children: [
+      { label: "List", href: "/products", icon: <ListAlt /> },
+      { label: "Add", href: "/products/add", icon: <Add /> },
+    ],
+  },
+  {
+    label: "Stock",
+    icon: <Storage />,
+    children: [
+      { label: "List", href: "/stock", icon: <ListAlt /> },
+      { label: "Alerts", href: "/stock/alerts", icon: <Notifications /> },
+    ],
+  },
+  {
+    label: "Orders",
+    icon: <ShoppingCart />,
+    children: [
+      { label: "List", href: "/orders", icon: <ListAlt /> },
+      { label: "Add", href: "/orders/add", icon: <Add /> },
+    ],
+  },
   { label: "Warehouses", href: "/warehouses", icon: <Warehouse /> },
-  { label: "Alerts", href: "/alerts", icon: <Notifications /> },
 ];

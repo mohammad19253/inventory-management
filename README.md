@@ -1,19 +1,24 @@
 # Multi-Warehouse Inventory Management System
 
 ## Overview
+
 Enhance the existing Multi-Warehouse Inventory Management System built with Next.js and Material-UI (MUI) for GreenSupply Co, a sustainable product distribution company. The current system is functional but needs significant improvements to be production-ready.
 
 ## 🎯 Business Context
+
 GreenSupply Co distributes eco-friendly products across multiple warehouse locations throughout North America. They need to efficiently track inventory across warehouses, manage stock movements, monitor inventory values, and prevent stockouts. This system is critical for their daily operations and customer satisfaction.
 
 ## 🛠️ Tech Stack
+
 - [Next.js](https://nextjs.org/) - React framework
 - [Material-UI (MUI)](https://mui.com/) - UI component library
 - [React](https://reactjs.org/) - JavaScript library
 - JSON file storage (for this assessment)
 
 ## 📋 Current Features (Already Implemented)
+
 The basic system includes:
+
 - ✅ Products management (CRUD operations)
 - ✅ Warehouse management (CRUD operations)
 - ✅ Stock level tracking per warehouse
@@ -69,6 +74,7 @@ Design the data structure, API contracts, and business logic as you see fit for 
 **B. Transfer Page UI**
 
 Create a `/transfers` page that provides:
+
 - A form to initiate stock transfers between warehouses
 - Transfer history view
 - Appropriate error handling and user feedback
@@ -86,13 +92,15 @@ Design the interface to be intuitive for warehouse managers performing daily ope
 Build a low stock alert and reorder recommendation system that helps warehouse managers proactively manage inventory levels.
 
 **Key Functionality:**
+
 - Identify products that need reordering based on current stock levels and reorder points
-- Categorize inventory by stock status (critical, low, adequate, overstocked)
+- Categorize inventory by stock status (critical, low, sufficient, overstocked)
 - Provide actionable reorder recommendations
 - Allow managers to track and update alert status
 - Integrate alerts into the main dashboard
 
 **Implementation Details:**
+
 - Create an `/alerts` page for viewing and managing alerts
 - Calculate stock across all warehouses
 - Persist alert tracking data (create `data/alerts.json`)
@@ -105,11 +113,13 @@ Use your judgment to determine appropriate thresholds, calculations, and user wo
 ## 📦 Getting Started
 
 ### Prerequisites
+
 - Node.js (v16 or higher recommended)
 - Modern web browser (Chrome, Firefox, Safari, or Edge)
 - Screen recording software for video submission (Loom, OBS, QuickTime, etc.)
 
 ### Installation
+
 ```bash
 # Install dependencies
 npm install
@@ -121,6 +131,7 @@ npm run dev
 ```
 
 ### Project Structure
+
 ```
 inventory-management-task/
 ├── data/                  # JSON data files
@@ -136,6 +147,7 @@ The existing codebase includes product, warehouse, and stock management features
 ## 📝 Submission Requirements
 
 ### 1. Code Submission
+
 - Push your code to **your own GitHub repository** (fork or new repo)
 - Clear commit history showing your progression
 - Update `package.json` with any new dependencies
@@ -146,16 +158,19 @@ The existing codebase includes product, warehouse, and stock management features
 Record a video demonstration covering:
 
 **Feature Demo (4-5 minutes)**
+
 - Redesigned dashboard walkthrough (demonstrate responsiveness)
 - Stock transfer workflow (show both successful and error scenarios)
 - Alert system functionality
 
 **Code Explanation (3-4 minutes)**
+
 - Key technical decisions and approach
 - Most challenging aspects and solutions
 - Code structure highlights
 
 **Reflection (1-2 minutes)**
+
 - What you're proud of
 - Known limitations or trade-offs
 - What you'd improve with more time
@@ -165,6 +180,7 @@ Record a video demonstration covering:
 ### 3. Update This README
 
 Add an implementation summary at the bottom with:
+
 - Your name and completion time
 - Features completed
 - Key technical decisions
@@ -180,6 +196,7 @@ Add an implementation summary at the bottom with:
 **Deadline:** 3 days (72 hours) from receiving this assignment
 
 Submit:
+
 1. GitHub repository link
 2. Video walkthrough link
 3. Updated README with implementation notes
@@ -193,6 +210,7 @@ Submit:
 ## 🏆 Optional Enhancements
 
 If you have extra time, consider adding:
+
 - Live deployment (Vercel/Netlify)
 - Dark mode
 - Export functionality (CSV/PDF)
@@ -229,6 +247,7 @@ A: This is solely for technical assessment. Your code will not be used commercia
 ## 🚀 Final Notes
 
 This assessment is designed to simulate real-world development scenarios. We're looking for:
+
 - Clean, maintainable code
 - Thoughtful problem-solving
 - Professional UI/UX

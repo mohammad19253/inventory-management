@@ -1,129 +1,101 @@
-import { useState } from "react";
-import { useRouter } from "next/router";
-import Link from "next/link";
+import React, { useState } from "react";
 import {
   Container,
-  Typography,
-  TextField,
-  Button,
-  Box,
   Paper,
+  Typography,
+  Stack,
+  Button,
+  Snackbar,
+  Alert,
 } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import ProductForm from "./ProductForm";
+import { productSchema } from "./schema/productSchema";
+import axios from "@/services/axios";
 
-export default function AddProduct() {
-  const [product, setProduct] = useState({
-    sku: "",
-    name: "",
-    category: "",
-    unitCost: "",
-    reorderPoint: "",
-  });
-
+export default function AddProductPage() {
   const router = useRouter();
 
-  const handleChange = (e) => {
-    setProduct({ ...product, [e.target.name]: e.target.value });
-  };
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      sku: "",
+      name: "",
+      category: "",
+      unitCost: 0,
+      reorderPoint: 0,
+    },
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await fetch("/api/products", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ...product,
-        unitCost: parseFloat(product.unitCost),
-        reorderPoint: parseInt(product.reorderPoint),
-      }),
-    });
-    if (res.ok) {
+  const [toast, setToast] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+
+  const showToast = (message, severity = "success") =>
+    setToast({ open: true, message, severity });
+  const handleCloseToast = () => setToast((prev) => ({ ...prev, open: false }));
+
+  const onSubmit = async (data) => {
+    try {
+      setLoadingSubmit(true);
+      await axios.post("/products", data);
+      showToast("Product created successfully");
+      reset();
       router.push("/products");
+    } catch (err) {
+      console.error(err);
+      showToast("Failed to create product", "error");
+    } finally {
+      setLoadingSubmit(false);
     }
   };
 
   return (
-    <>
-      <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
-        <Paper elevation={3} sx={{ p: 4 }}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Add New Product
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 2 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="SKU"
-              name="sku"
-              value={product.sku}
-              onChange={handleChange}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Product Name"
-              name="name"
-              value={product.name}
-              onChange={handleChange}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Category"
-              name="category"
-              value={product.category}
-              onChange={handleChange}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Unit Cost"
-              name="unitCost"
-              type="number"
-              inputProps={{ step: "0.01", min: "0" }}
-              value={product.unitCost}
-              onChange={handleChange}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Reorder Point"
-              name="reorderPoint"
-              type="number"
-              inputProps={{ min: "0" }}
-              value={product.reorderPoint}
-              onChange={handleChange}
-            />
-            <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-              >
-                Add Product
-              </Button>
-              <Button
-                fullWidth
-                variant="outlined"
-                component={Link}
-                href="/products"
-              >
-                Cancel
-              </Button>
-            </Box>
-          </Box>
-        </Paper>
-      </Container>
-    </>
+    <Container maxWidth="sm" sx={{ py: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }}  >
+        <Typography variant="h5" fontWeight="bold" mb={3}>
+          Add Product
+        </Typography>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <ProductForm control={control} errors={errors} />
+
+          <Stack direction="row" spacing={2} mt={2}>
+            <Button type="submit" variant="contained" disabled={loadingSubmit}>
+              {loadingSubmit ? "Saving..." : "Submit"}
+            </Button>
+            <Button
+              type="button"
+              variant="outlined"
+              onClick={() => reset()}
+              disabled={loadingSubmit}
+            >
+              Reset
+            </Button>
+          </Stack>
+        </form>
+      </Paper>
+
+      <Snackbar
+        open={toast.open}
+        autoHideDuration={2500}
+        onClose={handleCloseToast}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity={toast.severity} onClose={handleCloseToast}>
+          {toast.message}
+        </Alert>
+      </Snackbar>
+    </Container>
   );
 }

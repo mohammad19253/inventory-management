@@ -13,14 +13,14 @@ import {
 } from "recharts";
 import { Box } from "@mui/material";
 
-export default function Chart({
+export const Chart = ({
   type = "bar",
   data,
   dataKey,
   xKey,
   color = "#4caf50",
   height = 300,
-}) {
+}) => {
   return (
     <Box sx={{ width: "100%", height }}>
       <ResponsiveContainer width="100%" height="100%">
@@ -63,4 +63,4 @@ export default function Chart({
       </ResponsiveContainer>
     </Box>
   );
-}
+};

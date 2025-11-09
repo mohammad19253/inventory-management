@@ -17,7 +17,7 @@ export const getAppTheme = (mode = "light") =>
       ...(mode === "light"
         ? {
             background: { default: "#f4f6f8", paper: "#fff" },
-            primary: { main: "#1976d2" },
+            primary: { main: "#8951beff" },
           }
         : {
             background: { default: "#0d1117", paper: "#161b22" },

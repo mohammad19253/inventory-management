@@ -1,4 +1,4 @@
-import { readAlerts, saveAlerts } from "@/libs/alerts";
+import { readAlerts, saveAlerts } from "@/services/alerts";
 
 export default function handler(req, res) {
   const { id } = req.query;

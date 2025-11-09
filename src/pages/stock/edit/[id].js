@@ -1,157 +1,142 @@
-import { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import {
   Container,
   Typography,
-  TextField,
-  Button,
-  Box,
+  Snackbar,
+  Alert,
   Paper,
-  MenuItem,
+  Button,
+  Stack,
   CircularProgress,
 } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "@/services/axios";
+import StockForm from "../StockForm";
 
-export default function EditStock() {
-  const [stock, setStock] = useState({
-    productId: "",
-    warehouseId: "",
-    quantity: "",
-  });
-  const [products, setProducts] = useState([]);
-  const [warehouses, setWarehouses] = useState([]);
-  const [loading, setLoading] = useState(true);
-
+export default function EditStockPage() {
   const router = useRouter();
   const { id } = router.query;
+  const queryClient = useQueryClient();
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      productId: "",
+      warehouseId: "",
+      quantity: "",
+    },
+  });
+
+  const [toast, setToast] = React.useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const showToast = (message, severity = "success") =>
+    setToast({ open: true, message, severity });
+  const handleCloseToast = () => setToast((p) => ({ ...p, open: false }));
+
+  const {
+    data: stock,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["stock", id],
+    queryFn: async () => {
+      const res = await axios.get(`/stock/${id}`);
+      return res.data;
+    },
+    enabled: !!id,
+  });
 
   useEffect(() => {
-    if (id) {
-      Promise.all([
-        fetch(`/api/stock/${id}`).then((res) => res.json()),
-        fetch("/api/products").then((res) => res.json()),
-        fetch("/api/warehouses").then((res) => res.json()),
-      ]).then(([stockData, productsData, warehousesData]) => {
-        setStock(stockData);
-        setProducts(productsData);
-        setWarehouses(warehousesData);
-        setLoading(false);
-      });
-    }
-  }, [id]);
-
-  const handleChange = (e) => {
-    setStock({ ...stock, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const res = await fetch(`/api/stock/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        productId: parseInt(stock.productId),
-        warehouseId: parseInt(stock.warehouseId),
-        quantity: parseInt(stock.quantity),
-      }),
+    if (!stock) return;
+    reset({
+      productId: stock.productId,
+      warehouseId: stock.warehouseId,
+      quantity: stock.quantity,
     });
-    if (res.ok) {
-      router.push("/stock");
-    }
-  };
+  }, [stock]);
 
-  if (loading) {
+  const updateStock = useMutation({
+    mutationFn: async (data) => {
+      const res = await axios.put(`/stock/${id}`, data);
+      return res.data;
+    },
+    onSuccess: async () => {
+      showToast("Stock record updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["alerts", "count"] });
+      router.push("/stock");
+    },
+    onError: (err) => {
+      console.error(err);
+      showToast("Failed to update stock record", "error");
+    },
+  });
+
+  const onSubmit = (data) => updateStock.mutate(data);
+
+  if (isLoading) {
     return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-        }}
-      >
+      <Container maxWidth="sm" sx={{ py: 4, textAlign: "center" }}>
         <CircularProgress />
-      </Box>
+      </Container>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Container maxWidth="sm" sx={{ py: 4 }}>
+        <Alert severity="error">Failed to load stock record</Alert>
+      </Container>
     );
   }
 
   return (
-    <>
-      <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
-        <Paper elevation={3} sx={{ p: 4 }}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Edit Stock Record
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 2 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              select
-              label="Product"
-              name="productId"
-              value={stock.productId}
-              onChange={handleChange}
+    <Container maxWidth="sm" sx={{ py: 4 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h5" fontWeight="bold" mb={3}>
+          Edit Stock Record
+        </Typography>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <StockForm control={control} errors={errors} />
+          <Stack direction="row" spacing={2}>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={updateStock.isLoading}
             >
-              {products.map((product) => (
-                <MenuItem key={product.id} value={product.id}>
-                  {product.name} ({product.sku})
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              select
-              label="Warehouse"
-              name="warehouseId"
-              value={stock.warehouseId}
-              onChange={handleChange}
+              {updateStock.isLoading ? "Saving..." : "Submit"}
+            </Button>
+            <Button
+              type="button"
+              variant="outlined"
+              onClick={() => reset(stock)}
+              disabled={updateStock.isLoading}
             >
-              {warehouses.map((warehouse) => (
-                <MenuItem key={warehouse.id} value={warehouse.id}>
-                  {warehouse.name} ({warehouse.code})
-                </MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              label="Quantity"
-              name="quantity"
-              type="number"
-              inputProps={{ min: "0" }}
-              value={stock.quantity}
-              onChange={handleChange}
-            />
-            <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-              >
-                Update Stock
-              </Button>
-              <Button
-                fullWidth
-                variant="outlined"
-                component={Link}
-                href="/stock"
-              >
-                Cancel
-              </Button>
-            </Box>
-          </Box>
-        </Paper>
-      </Container>
-    </>
+              Reset
+            </Button>
+          </Stack>
+        </form>
+      </Paper>
+
+      <Snackbar
+        open={toast.open}
+        autoHideDuration={2500}
+        onClose={handleCloseToast}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert severity={toast.severity} onClose={handleCloseToast}>
+          {toast.message}
+        </Alert>
+      </Snackbar>
+    </Container>
   );
 }

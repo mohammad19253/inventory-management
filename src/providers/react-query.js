@@ -1,11 +1,19 @@
-'use client';
-import { QueryClientProvider } from 'react-query';
-import { queryClient } from '@/libs/react-query';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-export default function Providers({ children }) {
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+    mutations: {
+      retry: false,
+    },
+  },
+});
+export const ReactQueryProvider = ({ children }) => {
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
-}
+};

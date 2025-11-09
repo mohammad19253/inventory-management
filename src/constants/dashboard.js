@@ -6,6 +6,7 @@ export const SUMMARY_CARDS = [
   { label: 'Total Products', icon: CategoryIcon, key: 'products' },
   { label: 'Warehouses', icon: WarehouseIcon, key: 'warehouses' },
   { label: 'Total Inventory Value', icon: InventoryIcon, key: 'totalValue' },
+    { label: 'Total Inventory Quantities', icon: InventoryIcon, key: 'totalCount' },
 ];
 
 export const TABLE_HEADERS = [
