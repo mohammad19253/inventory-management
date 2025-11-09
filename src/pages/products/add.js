@@ -11,8 +11,8 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import ProductForm from "./ProductForm";
-import { productSchema } from "./schema/productSchema";
+import ProductForm from "../../components/product/ProductForm";
+import { productSchema } from "../../schemas/productSchema";
 import axios from "@/services/axios";
 
 export default function AddProductPage() {

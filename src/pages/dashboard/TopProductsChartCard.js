@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent, Typography } from "@mui/material";
-import { Chart } from "@/components/shared";
+import { Chart } from "@/shared";
 import { ResponsiveContainer } from "recharts";
 
 export default function TopProductsChartCard({ data, color }) {

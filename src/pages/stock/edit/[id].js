@@ -13,7 +13,7 @@ import {
 import { useForm } from "react-hook-form";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "@/services/axios";
-import StockForm from "../StockForm";
+import StockForm from "../../../components/stock/StockForm";
 
 export default function EditStockPage() {
   const router = useRouter();
@@ -71,7 +71,9 @@ export default function EditStockPage() {
     },
     onSuccess: async () => {
       showToast("Stock record updated successfully");
-      queryClient.invalidateQueries({ queryKey: ["alerts", "count"] });
+      queryClient.invalidateQueries({ queryKey: ["/alerts"] });
+      queryClient.invalidateQueries({ queryKey: ["/alerts/count"] });
+      // "/alerts/count"
       router.push("/stock");
     },
     onError: (err) => {

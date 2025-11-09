@@ -1,67 +1,63 @@
 [
   {
-    "id": "alert_1762694300201_a4fb87",
-    "productId": 1,
-    "productName": "Bamboo Spork Set",
-    "totalStock": 2000,
-    "reorderPoint": 100,
-    "reorderQty": 200,
-    "status": "overstocked",
-    "lastUpdated": "2025-11-09T13:30:04.384Z",
-    "actions": [],
-    "dismissed": false,
-    "notes": ""
-  },
-  {
-    "id": "alert_1762694300201_7304fb",
-    "productId": 2,
-    "productName": "Compostable Food Container 32oz",
-    "totalStock": 2000,
-    "reorderPoint": 500,
-    "reorderQty": 1000,
-    "status": "overstocked",
-    "lastUpdated": "2025-11-09T13:30:04.384Z",
-    "actions": [],
-    "dismissed": false,
-    "notes": ""
-  },
-  {
-    "id": "alert_1762694300201_4bf271",
+    "id": "alert_1762708966415_ce16a6",
     "productId": 3,
     "productName": "Wooden Chopsticks",
-    "totalStock": 4300,
-    "reorderPoint": 1000,
-    "reorderQty": 2000,
-    "status": "overstocked",
-    "lastUpdated": "2025-11-09T13:30:04.384Z",
-    "actions": [],
+    "totalStock": 30,
+    "reorderPoint": 800,
+    "reorderQty": 1600,
+    "status": "critical",
+    "lastUpdated": "2025-11-09T18:35:53.471Z",
+    "actions": [
+      {
+        "type": "ordered",
+        "at": "2025-11-09T17:32:00.015Z",
+        "actor": "ui",
+        "qty": 640,
+        "note": "we need this much product"
+      },
+      {
+        "type": "ordered",
+        "at": "2025-11-09T18:24:29.681Z",
+        "actor": "ui",
+        "qty": 500,
+        "note": "this item is needed"
+      },
+      {
+        "type": "ordered",
+        "at": "2025-11-09T18:35:35.673Z",
+        "actor": "ui",
+        "qty": 600,
+        "note": "we need this wooden chopsticks in our stock"
+      }
+    ],
     "dismissed": false,
     "notes": ""
   },
   {
-    "id": "alert_1762694300201_5c789e",
+    "id": "alert_1762708966415_c33565",
     "productId": 4,
     "productName": "Recyclable Paper Bowl",
-    "totalStock": 1550,
+    "totalStock": 2000,
     "reorderPoint": 750,
     "reorderQty": 1500,
     "status": "overstocked",
-    "lastUpdated": "2025-11-09T13:30:04.384Z",
+    "lastUpdated": "2025-11-09T18:35:53.471Z",
     "actions": [],
     "dismissed": false,
     "notes": ""
   },
   {
-    "id": "alert_1762694300201_fa222e",
+    "id": "alert_1762708966415_5eff59",
     "productId": 5,
     "productName": "Biodegradable Coffee Cup 12oz",
     "totalStock": 1150,
     "reorderPoint": 600,
     "reorderQty": 1200,
     "status": "overstocked",
-    "lastUpdated": "2025-11-09T13:30:04.384Z",
+    "lastUpdated": "2025-11-09T18:35:53.471Z",
     "actions": [],
-    "dismissed": false,
+    "dismissed": true,
     "notes": ""
   }
 ]

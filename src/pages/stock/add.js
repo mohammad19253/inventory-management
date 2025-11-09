@@ -11,9 +11,9 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import StockForm from "./StockForm";
+import StockForm from "../../components/stock/StockForm";
 import axios from "@/services/axios";
-import { stockSchema } from "./schema/stockSchema";
+import { stockSchema } from "../../schemas/stockSchema";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function AddStockPage() {
@@ -48,7 +48,7 @@ export default function AddStockPage() {
     try {
       setLoadingSubmit(true);
       await axios.post("/stock", data);
-      await queryClient.invalidateQueries(["alerts", "count"]);
+          queryClient.invalidateQueries({ queryKey: ["/alerts", "/alerts/count"] });
       showToast("Stock record added successfully");
       router.push("/stock");
       reset();

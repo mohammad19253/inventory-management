@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { DataTable } from "@/components/shared";
+import { DataTable } from "@/shared";
 
 export default function TransferHistory({
   transfers,

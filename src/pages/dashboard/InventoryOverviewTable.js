@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, CardContent, Typography, Chip } from "@mui/material";
-import { DataTable } from "@/components/shared";
+import { DataTable } from "@/shared";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 

@@ -10,10 +10,10 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import OrderForm from "./components/OrderForm";
+import OrderForm from "../../components/orders/OrderForm";
 
 import axios from "@/services/axios";
-import { orderSchema } from "./schemas";
+import { orderSchema } from "../../schemas/orderShema";
 import { useRouter } from "next/navigation";
 
 export default function AddOrderPage() {

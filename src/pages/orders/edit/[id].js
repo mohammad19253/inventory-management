@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import OrderForm from "../components/OrderForm";
+import OrderForm from "../../../components/orders/OrderForm";
 import axios from "@/services/axios";
 
 export default function EditOrderPage() {

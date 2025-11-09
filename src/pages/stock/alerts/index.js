@@ -17,10 +17,10 @@ import {
   Divider,
 } from "@mui/material";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Chart, DataTable } from "@/components/shared";
-import { appConfig } from "@/config/app";
+import { DataTable } from "@/shared";
+ 
 import axios from "@/services/axios";
-import { statusColor } from "./utils";
+import { statusColor } from "../../../utils";
 import StockReorderChart from "./stockReorderChart";
 
 export default function AlertsPage() {
@@ -44,7 +44,7 @@ export default function AlertsPage() {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["alerts", "list"],
+    queryKey: ["/alerts"],
     queryFn: async () => {
       const res = await axios.get("/alerts");
       return res.data;

@@ -16,7 +16,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Link from "next/link";
-import { DataTable } from "@/components/shared";
+import { DataTable } from "@/shared";
 import axios from "@/services/axios";
 
 export default function StockPage({ initialStock, products, warehouses }) {

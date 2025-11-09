@@ -11,7 +11,7 @@ async function fetchAlertCount() {
 
 export const AlertBadge = () => {
   const { data,   } = useQuery({
-    queryKey: ["alerts", "count"],
+    queryKey: ["/alerts/count"],
     queryFn: fetchAlertCount,
     staleTime: 0, 
     refetchOnMount: true, 

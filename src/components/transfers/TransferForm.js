@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { TRANSFER_SCHEMA } from "../schemas/transferSchema";
+import { TRANSFER_SCHEMA } from "../../schemas/transferSchema";
 
 export default function TransferForm({
   warehouses,

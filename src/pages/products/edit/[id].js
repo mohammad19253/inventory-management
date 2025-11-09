@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import axios from "@/services/axios";
-import ProductForm from "../ProductForm";
+import ProductForm from "../../../components/product/ProductForm";
 
 export default function EditProductPage() {
   const router = useRouter();

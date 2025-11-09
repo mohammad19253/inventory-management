@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Snackbar, Alert, Typography, Container, Divider } from "@mui/material";
 import axios from "@/services/axios";
 import { appConfig } from "@/config/app";
-import TransferForm from "./components/TransferForm";
-import TransferHistory from "./components/TransferHistory";
+import TransferForm from "../../components/transfers/TransferForm";
+import TransferHistory from "../../components/transfers/TransferHistory";
 
 export default function TransfersPage({
   warehouses,

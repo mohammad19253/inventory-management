@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete"; // ✅ NEW
-import { DataTable } from "@/components/shared";
+import { DataTable } from "@/shared";
 import axios from "@/services/axios";
 import Link from "next/link";
 import { format } from "date-fns";

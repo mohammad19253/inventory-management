@@ -6,7 +6,6 @@ import {
   Notifications,
   Storage,
   Add,
-  Edit,
   ListAlt,
   ShoppingCart,
 } from "@mui/icons-material";

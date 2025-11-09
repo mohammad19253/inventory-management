@@ -1,6 +1,6 @@
 import { ReactQueryProvider } from "@/providers/react-query";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
-import { Layout } from "@/components/shared";
+import { Layout } from "@/shared";
 import { AlertBadge } from "@/components/alert-badge";
 import { ThemeProvider } from "@/providers";
 import "@/styles/globals.css";
